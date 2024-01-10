@@ -11,6 +11,6 @@ plot the basis functions of Ellipslet and circlet
 main_Ellipse_detection.m:
 Ellipselet
 
-main_Ellipse_denoising
+main_Ellipse_denoising.m
 
 other codes are functions which used in main matlab codes
