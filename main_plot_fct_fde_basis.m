@@ -1,176 +1,149 @@
-%%%%%%%%%% Plot the Basis Functions of Circlet & Ellipselet
 % Written by Zahra Khodabandeh,
 % Isfahan University of Medical Sciences, Isfahan, Iran
 % Email: shimakhodabandeh@yahoo.com
 %
 % Input:
-% - Circle and Ellipse functions (represented by 'Circle()' and 'Ellipse()')
-% - Parameters for generating the Circle and Ellipse shapes
-% - Fourier Transform and filtering functions ('fdc', 'fde1', 'fde2', 'fde3', 'fde4')
+% - Circle and Ellipse shapes generated using the functions Ellipse() and Circle()
+% - Fourier transforms of the Circle and Ellipse
+% - Fourier domain decomposition using different methods (fdc, fde1, fde2, fde3, fde4)
 %
 % Output:
-% - Plots of Circle and Ellipse shapes, their Fourier transforms, 
-%   and results from different filtering operations.
+% - Plots of Circle and Ellipse functions and their Fourier transforms
+% - Fourier transform magnitude and phase for different decomposition methods (fdc, fde1, fde2, fde3, fde4)
 
-clear all; close all; clc;
+clear all; close all; clc;  % Clear workspace, close all figures, and reset command window
 
-% Parameters for generating the shapes
-A = 10;  % Amplitude (not used directly in this code)
-B = 1;   % Not used, placeholder for future code extension
-D = 1;   % Not used, placeholder for future code extension
+% Parameters for the Ellipse and Circle shapes
+A = 10;   % Amplitude parameter for the circle and ellipse
+B = 1;    % B parameter for the ellipse
+D = 1;    % D parameter for the ellipse
 
-% Generate an Ellipse and Circle shape
-e = double(Ellipse(50, 20, 45, 250, 250, 512, 512));  % Ellipse with specified parameters
-c = ~Circle(50, 128, 128, 256, 256);  % Inverse of a Circle with specified parameters
+% Generate Ellipse and Circle shapes
+e = double(Ellipse(50, 20, 45, 250, 250, 512, 512));  % Ellipse shape
+c = ~Circle(50, 128, 128, 256, 256);  % Circle shape (inverted)
 
-% Display Circle and Ellipse shapes
+% Plot the Circle and Ellipse with their Fourier transforms
 figure;
 title('Circle & Ellipse with their Fourier Transforms');
 
-% Plot the Circle shape
-subplot(2,2,1); 
-imshow(c); 
-colormap jet;
-colorbar;
+% Display Circle image
+subplot(221);
+imshow(c); colormap jet; colorbar;
 title('Circle');
 
-% Plot the Ellipse shape
-subplot(2,2,2); 
-imshow(e); 
-colormap jet;
-colorbar;
+% Display Ellipse image
+subplot(222);
+imshow(e); colormap jet; colorbar;
 title('Ellipse');
 
-% Compute the 2D Fourier Transform of the Circle and Ellipse
-C = fft2(c);  % Fourier transform of Circle
-Cc = fftshift(C);  % Shift the zero frequency component to the center
-E = fft2(e);  % Fourier transform of Ellipse
-Ec = fftshift(E);  % Shift the zero frequency component to the center
+% Compute Fourier Transforms of Circle and Ellipse
+C = fft2(c);  % Fourier Transform of Circle
+Cc = fftshift(C);  % Shift zero frequency to the center
 
-% Plot the magnitude of the Fourier Transforms of Circle and Ellipse
-subplot(2,2,3);
-imshow(log(1 + abs(Cc)), []); 
-colormap jet;
-colorbar;
-title('FFT of Circle');
+E = fft2(e);  % Fourier Transform of Ellipse
+Ec = fftshift(E);  % Shift zero frequency to the center
 
-subplot(2,2,4); 
-imshow(log(1 + abs(Ec)), []); 
-colormap jet;
-colorbar;
-title('FFT of Ellipse');
+% Display Fourier Magnitude of Circle
+subplot(223);
+imshow(log(1 + abs(Cc)), []); colormap jet; colorbar;
+title('Fourier Transform of Circle');
 
-% Apply the 'fdc' function to the Circle shape (Fourier Domain Calculation)
-[Clc, Gkc] = fdc(c, 4, 50, 'complex');
+% Display Fourier Magnitude of Ellipse
+subplot(224);
+imshow(log(1 + abs(Ec)), []); colormap jet; colorbar;
+title('Fourier Transform of Ellipse');
 
-% Plot the magnitude of the basis functions of the Circle using 'fdc'
+% Fourier Domain Decomposition (fdc) for Circle
+[Clc, Gkc] = fdc(c, 4, 50, 'complex');  % Decompose Circle using 'complex' method
+
+% Display magnitude of decomposition results for Circle
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(abs(Gkc{k})); 
-    colormap jet;
-    colorbar;
-    title(['Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(abs(Gkc{k})); colormap jet; colorbar;
+    title(['Magnitude of Gkc - Component ' num2str(k)]);
 end
 
-% Plot the phase (angle) of the basis functions of the Circle
+% Display phase of decomposition results for Circle
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(angle(Gkc{k})); 
-    colormap jet;
-    colorbar;
-    title(['Phase of Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(angle(Gkc{k})); colormap jet; colorbar;
+    title(['Phase of Gkc - Component ' num2str(k)]);
 end
 
-% Apply the 'fde1' function to the Ellipse shape (Fourier Domain Calculation)
-[Cle, Gke] = fde1(e, 4, 50, 20, 'complex');
+% Fourier Domain Decomposition (fde1) for Ellipse
+[Cle, Gke] = fde1(e, 4, 50, 20, 'complex');  % Decompose Ellipse using 'complex' method
 
-% Plot the magnitude of the basis functions of the Ellipse using 'fde1'
+% Display magnitude of decomposition results for Ellipse (fde1)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(abs(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(abs(Gke{k})); colormap jet; colorbar;
+    title(['Magnitude of Gke (fde1) - Component ' num2str(k)]);
 end
 
-% Plot the phase (angle) of the basis functions of the Ellipse using 'fde1'
+% Display phase of decomposition results for Ellipse (fde1)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(angle(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Phase of Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(angle(Gke{k})); colormap jet; colorbar;
+    title(['Phase of Gke (fde1) - Component ' num2str(k)]);
 end
 
-% Apply the 'fde2' function to the Ellipse shape (Fourier Domain Calculation)
-[Cle, Gke] = fde2(e, 4, 50, 20, 'complex');
+% Fourier Domain Decomposition (fde2) for Ellipse
+[Cle, Gke] = fde2(e, 4, 50, 20, 'complex');  % Decompose Ellipse using 'complex' method
 
-% Plot the magnitude of the basis functions of the Ellipse using 'fde2'
+% Display magnitude of decomposition results for Ellipse (fde2)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(abs(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(abs(Gke{k})); colormap jet; colorbar;
+    title(['Magnitude of Gke (fde2) - Component ' num2str(k)]);
 end
 
-% Plot the phase (angle) of the basis functions of the Ellipse using 'fde2'
+% Display phase of decomposition results for Ellipse (fde2)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(angle(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Phase of Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(angle(Gke{k})); colormap jet; colorbar;
+    title(['Phase of Gke (fde2) - Component ' num2str(k)]);
 end
 
-% Apply the 'fde3' function to the Ellipse shape (Fourier Domain Calculation)
-[Cle, Gke] = fde3(e, 4, 50, 20, 'complex');
+% Fourier Domain Decomposition (fde3) for Ellipse
+[Cle, Gke] = fde3(e, 4, 50, 20, 'complex');  % Decompose Ellipse using 'complex' method
 
-% Plot the magnitude of the basis functions of the Ellipse using 'fde3'
+% Display magnitude of decomposition results for Ellipse (fde3)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(abs(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(abs(Gke{k})); colormap jet; colorbar;
+    title(['Magnitude of Gke (fde3) - Component ' num2str(k)]);
 end
 
-% Plot the phase (angle) of the basis functions of the Ellipse using 'fde3'
+% Display phase of decomposition results for Ellipse (fde3)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(angle(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Phase of Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(angle(Gke{k})); colormap jet; colorbar;
+    title(['Phase of Gke (fde3) - Component ' num2str(k)]);
 end
 
-% Apply the 'fde4' function to the Ellipse shape (Fourier Domain Calculation)
-[Cle, Gke] = fde4(e, 4, 50, 20, 'complex');
+% Fourier Domain Decomposition (fde4) for Ellipse
+[Cle, Gke] = fde4(e, 4, 50, 20, 'complex');  % Decompose Ellipse using 'complex' method
 
-% Plot the magnitude of the basis functions of the Ellipse using 'fde4'
+% Display magnitude of decomposition results for Ellipse (fde4)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(abs(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(abs(Gke{k})); colormap jet; colorbar;
+    title(['Magnitude of Gke (fde4) - Component ' num2str(k)]);
 end
 
-% Plot the phase (angle) of the basis functions of the Ellipse using 'fde4'
+% Display phase of decomposition results for Ellipse (fde4)
 figure;
 for k = 1:4
-    subplot(2,2,k);
-    imshow(angle(Gke{k})); 
-    colormap jet;
-    colorbar;
-    title(['Phase of Basis Function ' num2str(k)]);
+    subplot(2, 2, k);
+    imshow(angle(Gke{k})); colormap jet; colorbar;
+    title(['Phase of Gke (fde4) - Component ' num2str(k)]);
 end
